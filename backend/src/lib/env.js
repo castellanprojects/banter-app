@@ -18,4 +18,4 @@ export const ENV = {
 // RESEND_API_KEY = "re_XVbHqp7w_BN1TaTLGRSCiekLAGzNxpLVR"
 // EMAIL_FROM = "onboarding@resend.dev"
 // EMAIL_FROM_NAME = "Midgard"
-// CLIENT_URL = http://localhost:5137
+// CLIENT_URL = http://localhost:5137auth
