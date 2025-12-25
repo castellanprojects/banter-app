@@ -1,6 +1,8 @@
+import { sendWelcomeEmail } from "../emails/emailHandlers.js";
 import { generateToken } from "../lib/utils.js";
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
+import { ENV } from "../lib/env.js";
 
 export const signup = async (req, res) => {
     
@@ -13,7 +15,7 @@ export const signup = async (req, res) => {
         }
         
         if (password.length < 8) {
-            return res.status(400).json({message: "You must leave at least 6 characters!"})
+            return res.status(400).json({message: "You must leave at least 8 characters!"})
         }
         
         // Email validating
@@ -34,6 +36,7 @@ export const signup = async (req, res) => {
         })
 
         if (newUser) {
+
             // generateToken(newUser._id, res)
             // await newUser.save()
 
@@ -45,7 +48,15 @@ export const signup = async (req, res) => {
                 fullName: newUser.fullName,
                 email: newUser.email,
                 profilePic: newUser.profilePic,
-            })
+            });
+
+            try {
+                await sendWelcomeEmail(savedUser.email, savedUser.fullName, savedUser.CLIENT_URL);
+            }
+
+            catch (error) {
+                console.log("Failed to send welcome email: ", error);
+            }
         }
 
         else {
