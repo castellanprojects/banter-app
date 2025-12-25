@@ -21,8 +21,5 @@
   "bugs": {
     "url": "https://github.com/castellanprojects/banter-app/issues"
   },
-  "homepage": "https://github.com/castellanprojects/banter-app#readme",
-  "devDependencies": {
-    "vite": "^7.3.0"
-  }
+  "homepage": "https://github.com/castellanprojects/banter-app#readme"
 }
