@@ -4,6 +4,7 @@ import { toast } from "react-hot-toast";
 import { useAuthStore } from "./useAuthStore";
 
 export const useChatStore = create((set, get) => ({
+
     allContacts: [],
     chats: [],
     messages: [],
@@ -35,6 +36,7 @@ export const useChatStore = create((set, get) => ({
             set({ isUsersLoading: false });
         }
     },
+
     getMyChatPartners: async () => {
         set({ isUsersLoading: true });
         try {
@@ -48,6 +50,7 @@ export const useChatStore = create((set, get) => ({
             set({ isUsersLoading: false });
         }
     },
+
     getMessagesByUserId: async (userId) => {
         set({ isMessagesLoading: true })
         try {
@@ -60,5 +63,49 @@ export const useChatStore = create((set, get) => ({
         finally {
             set({ isMessagesLoading: false });
         }
+    },
+
+    sendMessage: async (messageData) => {
+        const { selectedUser } = get();
+        const { authUser } = useAuthStore.getState();
+
+        if (!selectedUser || !authUser) {
+            toast.error("No user selected or not authenticated");
+            return;
+        }
+
+        const tempId = `temp-${Date.now()}`;
+        const optimisticMessage = {
+            _id: tempId,
+            senderId: authUser._id,
+            text: messageData.text,
+            image: messageData.image,
+            createdAt: new Date().toISOString(),
+            isOptimistic: true,
+        };
+
+        // Optimistic update
+        set((state) => ({ messages: [...state.messages, optimisticMessage] }));
+
+        try {
+            const res = await axiosInstance.post(
+                `/messages/send/${selectedUser._id}`,
+                messageData
+            );
+
+            // Replace the optimistic message with the real one
+            set((state) => ({
+                messages: state.messages
+                    .filter((m) => m._id !== tempId)
+                    .concat(res.data),
+            }));
+        } catch (error) {
+            // Rollback optimistic message on failure
+            set((state) => ({
+                messages: state.messages.filter((m) => m._id !== tempId),
+            }));
+            toast.error(error.response?.data?.message || "Something went wrong");
+        }
     }
+
 }));

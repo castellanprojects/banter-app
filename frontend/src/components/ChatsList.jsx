@@ -5,16 +5,16 @@ import NoChatsFound from "./NoChatsFound";
 import { useAuthStore } from '../store/useAuthStore';
 
 function ChatsList() {
-  const { getMyChatPartners, chats, isUsersLoading, setSelectedUser } = useChatStore();
+  const { getMyChatPartners, chats, isUsersLoading, setSelectedUser, selectedUser } = useChatStore();
   useEffect(() => { getMyChatPartners() }, [getMyChatPartners]);
   if (isUsersLoading) return <UsersLoadingSkeleton/>;
   if (chats.length === 0) return <NoChatsFound/>;
   return (
     <>
     {chats.map((chat) => (
-      <div key={chat._id} className='bg-amber-900/10 p-4 rounded-lg cursor-pointer hover:bg-amber-800/50 transition-colors' onClick={() => setSelectedUser(chat)}>
+      <div key={chat._id} className={`bg-${selectedUser === chat._id ? "amber-600/50" : "amber-900/10"} p-4 rounded-lg cursor-pointer hover:bg-amber-800/50 transition-colors`} onClick={() => setSelectedUser(chat)}>
         <div className="flex items-center gap-3">
-            <div className={`avatar ${onlineUsers.includes(chat._id) ? "online" : "offline"} ring-${onlineUsers.includes(chat._id) ? "success" : "secondary"} ring-offset-base-100 w-full rounded-full ring ring-offset-2`}>
+            <div className={`avatar online ring-success ring-offset-base-100 w-12 rounded-full ring ring-offset-2`}>
               <div className="size-12 rounded-full">
                 <img src={chat.profilePic || "/avatar.png"} alt={chat.fullName} />
               </div>

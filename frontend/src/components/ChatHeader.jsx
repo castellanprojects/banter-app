@@ -12,7 +12,7 @@ function ChatHeader() {
     return () => window.removeEventListener("keydown", handleEscKey);
   }, [setSelectedUser])
   return (
-    <div className='flex justify-between items-center bg-amber-800/25 border-b border-amber-900/20 mh-h-[84px] px-6 py-4 flex-1'>
+    <div className='flex justify-between items-center bg-amber-800/25 border-b border-amber-900/20 max-h-[84px] px-6 py-4 flex-1'>
         <div className='flex items-center space-x-3'>
             <div className='avatar online'>
                 <div className='w-12 rounded-full ring ring-success ring-offset-2'>
