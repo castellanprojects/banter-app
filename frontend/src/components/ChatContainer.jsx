@@ -28,7 +28,10 @@ function ChatContainer() {
                   )}
                   {msg.text && <p className='mt-2'>{msg.text}</p>}
                   <p className='text-xs text-amber-50 mt-1 opacity-80 flex items-center gap-1'>
-                    {new Date(msg.createdAt).toISOString().slice(11, 16)}
+                    {new Date(msg.createdAt).toLocaleTimeString(undefined, {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
                   </p>
                 </div>
               </div>
