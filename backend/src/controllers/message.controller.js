@@ -27,7 +27,7 @@ export const getMessagesByUserId = async (req, res) => {
         const myId = req.user._id;
         const { id:userToChatId } = req.params
 
-        const message = Message.find({
+        const messages = await Message.find({
             $or: [
                 { senderId: myId, receiverId: userToChatId },
                 { senderId: userToChatId, receiverId: myId }
@@ -104,14 +104,14 @@ export const getChatPartners = async (req, res) => {
 
         const loggedInUserId = req.user._id;
 
-        const message = Message.find({
+        const messages = await Message.find({
             $or: [
-                { senderId: loggenInUserId },
-                { receiverId: loggenInUserId }
+                { senderId: loggedInUserId },
+                { receiverId: loggedInUserId }
             ]
         });
 
-        const chatPartnersIds = [...new Set(messages.map((msg) => msg.senderId.toString() === loggedInUSerID.toString() ? msg.receiverId.toString() : msg.senderId.toString() ))];
+        const chatPartnersIds = [...new Set(messages.map((msg) => (msg.senderId.toString() === loggedInUserId.toString() ? msg.receiverId.toString() : msg.senderId.toString())) )];
 
         const chatPartners = await User.find({ _id: {$in:chatPartnersIds} }).select("-password");
 
